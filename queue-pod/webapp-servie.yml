@@ -1,0 +1,48 @@
+kind: Service
+apiVersion: v1
+metadata:
+  # Unique key of the Service instance
+  name: fleetman-webapp
+spec:
+  ports:
+    # Accept traffic sent to port 80
+    - name: http
+    #accept traffic on port 80 from service
+      port: 80
+      #forward traffic to port 80 on containe
+      targetPort: 80
+      nodePort: 30080
+      #port available to browser >30000
+  selector:
+    # Loadbalance traffic across Pods matching
+    # this label selector. This selector will select all pods with key app and alue webapp
+    app: webapp
+    release: "0-5"
+  # Create an HA proxy in the cloud provider
+  # with an External IP address - *Only supported
+  # by some cloud providers*
+  #type: LoadBalancer
+   #type: ClusterIP
+   #implies service will be avaialable from only inside the cluster, acts as private service
+  type: NodePort 
+  # available to whole Kubernetes cluster, expose a port through this node.
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  # Unique key of the Service instance
+  name: fleetman-queue
+spec:
+  ports:
+    # Accept traffic sent to port 80
+    - name: http
+    #accept traffic on port 80 from service
+      port: 8161
+      #forward traffic to port 80 on containe
+#      targetPort: 8161
+      nodePort: 30010
+      #port available to browser >30000
+  selector:
+    app: queue1
+  type: NodePort
