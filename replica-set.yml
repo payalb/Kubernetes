@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: webapp 
+  #name for replica set, generally same as pod
+spec:
+  replicas: 1
+  selector: #which pod definition should become part of replica-set
+    matchLabels:
+      app: webapp
+  template: # template for pods
+    metadata: 
+     # name: webapp #no need to name a pod explicitly.
+      labels: 
+        app: webapp
+    spec:
+      containers:
+      -  name: webapp
+         image: richardchesterwood/k8s-fleetman-webapp-angular:release0
+
+---
+#3 dashes to define second pod
+apiVersion: v1
+kind: Pod
+metadata: 
+  name: webappv2
+  labels: 
+    app: webapp
+    release: "0-5"
+spec:
+  containers:
+  -  name: webapp
+     image: richardchesterwood/k8s-fleetman-webapp-angular:release0-5
+
+---
+apiVersion: v1
+kind: Pod
+metadata: 
+  name: queue1
+  labels: 
+    app: queue1
+spec:
+  containers:
+  -  name: queue1
+     image: richardchesterwood/k8s-fleetman-queue:release1
